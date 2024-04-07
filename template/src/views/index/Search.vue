@@ -83,7 +83,7 @@ const setLoading = (flag: boolean): void => {
   loading.value = flag;
 };
 const search = () => {
-  emit('search', formData);
+  emit('search', JSON.parse(JSON.stringify(formData)));
 };
 defineExpose({
   setLoading,
