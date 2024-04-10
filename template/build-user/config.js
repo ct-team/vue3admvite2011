@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-  appVersion: '1.0.0', // 项目版本
   appUrl: '/static/ct108-admin-site/test/', // 项目路径  如   /static/mobile/test/
   envConfig: {
     development: {
