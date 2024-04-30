@@ -1,11 +1,13 @@
 <template>
   <dart-table
-    :data="data.List"
+    :data="data"
     :loading="loading"
     border
-    :page-size="data.PageSize"
-    :page-total="data.RecordCount"
-    :current-page="data.PageIndex"
+    :page-size="pagination.pageSize"
+    :page-total="pagination.recordCount"
+    :current-page="pagination.pageIndex"
+    page-layout="sizes,total, prev, pager, next, jumper"
+    @page-size-change="onPageSizeChange"
     @page-current-change="onPageChange"
   >
     <el-table-column prop="GoodsId" width="100" label="商品ID" />
@@ -81,12 +83,13 @@ import type { TypeTableData } from '@/types/index.d';
 import Bus from '@/assets/js/bus';
 const { proxy } = useCommon();
 defineProps({
-  data: { type: Object, default: () => {} },
+  data: { type: Array, default: () => [] },
+  pagination: { type: Object, default: () => {} },
   loading: Boolean
 });
 
 // 声明emits
-const emit = defineEmits(['open-view', 'open-edit', 'page-change']);
+const emit = defineEmits(['open-view', 'open-edit', 'page-change', 'page-size-change']);
 const stausFormatter = (row: TypeTableData) => {
   const item = SoldList.find((op: TypeList) => {
     return op.value === row.GoodsState;
@@ -96,6 +99,9 @@ const stausFormatter = (row: TypeTableData) => {
 
 const onPageChange = (index: number) => {
   emit('page-change', index);
+};
+const onPageSizeChange = (size: number) => {
+  emit('page-size-change', size);
 };
 const onEdit = (id: number) => {
   emit('open-edit', id);

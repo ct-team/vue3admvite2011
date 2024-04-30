@@ -5,7 +5,9 @@
     <Table
       @open-edit="onOpenEdit"
       @page-change="onPageChange"
+      @page-size-change="onPageSizeChange"
       :data="tableData"
+      :pagination="pagination"
       :loading="loading"
     ></Table>
     <router-view></router-view>
@@ -20,12 +22,14 @@ import Tool from './Tool.vue';
 import type { ResponseInfo } from '@/types/common.d';
 import type { TypeSearchInfo } from '@/types/index.d';
 import { apiGetGoodsList, apiGetGoodsType, apiGetGrantType } from '@/api/index';
+import { Pagination } from '@/config';
 import useCommon from '@/hooks/use-common';
 import Bus from '@/assets/js/bus';
-const { router, proxy } = useCommon();
+const { router } = useCommon();
 const searchRef = ref();
-const tableData = ref({});
+const tableData = ref([]);
 const loading = ref(true);
+const pagination: any = ref({ ...Pagination });
 let searchDataHistory: TypeSearchInfo = {};
 
 const onSearch = (searchValue: TypeSearchInfo): void => {
@@ -41,9 +45,16 @@ const onOpenEdit = (id: number): void => {
 const setTableLoading = (type: boolean) => {
   loading.value = type;
 };
-const onPageChange = (PageIndex: number) => {
-  if (PageIndex > 0) {
-    searchDataHistory.PageIndex = PageIndex;
+const onPageChange = (pageIndex: number) => {
+  if (pageIndex > 0) {
+    pagination.value.pageIndex = pageIndex;
+  }
+
+  refreshTable(searchDataHistory);
+};
+const onPageSizeChange = (size: number) => {
+  if (size > 0) {
+    pagination.value.pageSize = size;
   }
 
   refreshTable(searchDataHistory);
@@ -52,16 +63,25 @@ const onPageChange = (PageIndex: number) => {
 const refreshTable = (data?: TypeSearchInfo, complete?: any) => {
   setTableLoading(true);
   const newData = data ? data : searchDataHistory;
-  apiGetGoodsList(newData)
+  apiGetGoodsList({
+    ...newData,
+    ...{ PageIndex: pagination.value.pageIndex, PageSize: pagination.value.pageSize }
+  })
     .then((res: ResponseInfo) => {
       if (res.Code === 0) {
-        tableData.value = res.Data;
+        tableData.value = res.Data.List;
+        pagination.value = {
+          recordCount: res.Data.RecordCount,
+          pageSize: res.Data.PageSize,
+          pageIndex: res.Data.PageIndex
+        };
       }
     })
     .catch(() => {
       tableData.value = [];
+      pagination.value = { ...Pagination };
     })
-    .then(() => {
+    .finally(() => {
       complete && complete();
       setTableLoading(false);
     });

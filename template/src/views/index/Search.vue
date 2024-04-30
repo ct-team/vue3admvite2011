@@ -68,8 +68,6 @@ const formData = reactive<TypeSearchInfo>({
   GoodsType: '',
   GrantType: '',
   GoodsState: '',
-  PageIndex: 1,
-  PageSize: 10,
   IsCanDelete: 0
 });
 
