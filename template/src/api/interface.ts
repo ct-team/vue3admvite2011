@@ -3,7 +3,7 @@ const index = {
   AddWarningConfig: '/api/GoodsManage/AddWarningConfig',
   GetWarningConfig: '/api/GoodsManage/GetWarningConfig',
   GetGoodsType: '/api/GoodsManage/GetGoodsType',
-  GetGrantType: '/api/GoodsManage/GetGrantType2',
+  GetGrantType: '/api/GoodsManage/GetGrantType',
   GetGoodsList: '/api/GoodsManage/GetGoodsList',
   EditGoods: '/api/GoodsManage/EditGoods',
   UpLoadImage: '/api/GoodsManage/UpLoadImage',

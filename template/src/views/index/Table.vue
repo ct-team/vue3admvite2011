@@ -1,11 +1,11 @@
 <template>
   <dart-table
-    :data="data"
+    :data="data.List"
     :loading="loading"
     border
-    :page-size="pagination.pageSize"
-    :page-total="pagination.recordCount"
-    :current-page="pagination.pageIndex"
+    :page-size="data.PageSize"
+    :page-total="data.RecordCount"
+    :current-page="data.PageIndex"
     page-layout="sizes,total, prev, pager, next, jumper"
     @page-size-change="onPageSizeChange"
     @page-current-change="onPageChange"
@@ -83,8 +83,7 @@ import type { TypeTableData } from '@/types/index.d';
 import Bus from '@/assets/js/bus';
 const { proxy } = useCommon();
 defineProps({
-  data: { type: Array, default: () => [] },
-  pagination: { type: Object, default: () => {} },
+  data: { type: Object, default: () => {} },
   loading: Boolean
 });
 

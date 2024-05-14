@@ -1,8 +1,8 @@
 export const ErrorCheckTip = '请检查输入项';
 export const Pagination = {
-  pageIndex: 1, // 当前页数
-  pageSize: 10, // 每页的展示条数
-  recordCount: 0 //总条数
+  PageIndex: 1, // 当前页数
+  PageSize: 10, // 每页的展示条数
+  RecordCount: 0 //总条数
 };
 //可售类型
 export const SoldList = [
