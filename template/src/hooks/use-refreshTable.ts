@@ -72,6 +72,7 @@ export default function useRefreshTable(params: any): TypeReturnValues {
   const pagination = ref<any>({ ...options.pagination });
   const onSearch = (searchValue: any) => {
     searchDataHistory.value = cloneDeep(searchValue);
+    pagination.value[options.paginationMap.pageIndex] = 1;
     refreshTable(searchValue);
   };
   const setTableLoading = (type: boolean) => {
