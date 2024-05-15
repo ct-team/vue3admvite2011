@@ -20,7 +20,6 @@ import Table from './Table.vue';
 import Tool from './Tool.vue';
 
 import { apiGetGoodsList, apiGetGoodsType, apiGetGrantType } from '@/api/index';
-import { Pagination } from '@/config';
 import useCommon from '@/hooks/use-common';
 import useRefreshTable from '@/hooks/use-refreshTable';
 
@@ -28,7 +27,6 @@ const searchRef = ref(null);
 const { loading, tableData, onSearch, onPageSizeChange, onPageChange } = useRefreshTable({
   searchRef,
   ajax: apiGetGoodsList,
-  pagination: Pagination,
   bindEvent: 'refreshTable'
 });
 const { router } = useCommon();

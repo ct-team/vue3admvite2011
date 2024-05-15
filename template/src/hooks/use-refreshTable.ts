@@ -7,7 +7,7 @@ import { merge, cloneDeep } from 'lodash-es';
 // options
 type TypeOptions = {
   ajax: any; //请求 promise 必填
-  pagination: object; //分页数据 必填
+  pagination: object | null; //分页数据 必填
   paginationMap: PaginationMap; //分页映射
   dataMap: DataMap; //数据映射
   code: number; //code 成功值
@@ -51,7 +51,7 @@ export default function useRefreshTable(params: any): TypeReturnValues {
   const config: TypeOptions = {
     ajax: null,
     searchRef: null,
-    pagination: {},
+    pagination: null,
     paginationMap: { pageSize: 'PageSize', pageIndex: 'PageIndex' },
     dataMap: {
       data: 'Data',
@@ -69,10 +69,14 @@ export default function useRefreshTable(params: any): TypeReturnValues {
   const loading = ref(false);
   const tableData = ref<any>({});
   const searchDataHistory = ref<any>({}); // 历史搜索条件
-  const pagination = ref<any>({ ...options.pagination });
+  const paginationDefault = options.pagination || {
+    PageIndex: 1,
+    PageSize: 10
+  };
+  const pagination: any = { ...paginationDefault };
   const onSearch = (searchValue: any) => {
     searchDataHistory.value = cloneDeep(searchValue);
-    pagination.value[options.paginationMap.pageIndex] = 1;
+    pagination[options.paginationMap.pageIndex] = 1;
     refreshTable(searchValue);
   };
   const setTableLoading = (type: boolean) => {
@@ -95,7 +99,7 @@ export default function useRefreshTable(params: any): TypeReturnValues {
 
     let prames = {
       ...newData,
-      ...pagination.value
+      ...pagination
     };
     if (options.beforeFormat) {
       prames = options.beforeFormat(prames);
@@ -120,7 +124,7 @@ export default function useRefreshTable(params: any): TypeReturnValues {
 
   const onPageSizeChange = (size: number) => {
     if (size > 0) {
-      pagination.value[options.paginationMap.pageSize] = size;
+      pagination[options.paginationMap.pageSize] = size;
     }
 
     refreshTable();
@@ -130,7 +134,7 @@ export default function useRefreshTable(params: any): TypeReturnValues {
 
   const onPageChange = (pageIndex: number) => {
     if (pageIndex > 0) {
-      pagination.value[options.paginationMap.pageIndex] = pageIndex;
+      pagination[options.paginationMap.pageIndex] = pageIndex;
     }
 
     refreshTable();
