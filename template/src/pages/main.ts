@@ -5,7 +5,7 @@ import ElementPlus from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import * as ElementPlusIconsVue from '@/assets/js/icon';
 import { alias } from '@/config/permission';
-import { clearEmptyData, showMessage } from '@/utils';
+import { clearEmptyData, showMessage, interceptErrorPublic } from '@/utils';
 import { routerInit } from '@/assets/js/permission';
 import type { ResponseInfo } from '@/types/common.d';
 import App from './App.vue';
@@ -41,10 +41,8 @@ app
       opts.params = clearEmptyData(opts.params);
       opts.data = clearEmptyData(opts.data);
     },
-    interceptError(res: ResponseInfo) {
-      const data: any = JSON.parse(JSON.stringify(res).toLowerCase());
-
-      showMessage(data.message);
+    interceptError(res: any) {
+      interceptErrorPublic(res);
     },
     interceptorSuccess(res: ResponseInfo) {
       const data: any = JSON.parse(JSON.stringify(res).toLowerCase());

@@ -34,3 +34,13 @@ export const toFixed = (num: number, point: number): number => {
   console.log(n);
   return Number(n);
 };
+
+export const interceptErrorPublic = (res: any) => {
+  if (res.Message) {
+    showMessage(res.Message);
+    return;
+  }
+  if (res && res.response) {
+    showMessage(res.response.data || res.response.statusText || res.response.status);
+  }
+};
