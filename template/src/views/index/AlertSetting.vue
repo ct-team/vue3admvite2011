@@ -1,56 +1,59 @@
 <template>
-  <el-drawer size="70%" v-model="status" title="预警配置" @closed="onClosed">
-    <div v-loading="slideLoading">
-      <el-form :model="formData" ref="formRef" :rules="formRules">
-        <el-form-item prop="list">
-          <dart-list-temp
-            v-model="formData.list"
-            :rules="listRules"
-            :max="20"
-            ref="listRef"
-            :default-data="{ UserName: '', Email: '', Phone: '' }"
-            @change="onClearVaid('list')"
-          >
-            <dart-list-temp-item prop="UserName" label="用户名">
-              <template #default="scope">
-                <el-input
-                  v-model="scope.row.UserName"
-                  placeholder="请输入用户名"
-                  :max-length="30"
-                  clearable
-                ></el-input>
-              </template>
-            </dart-list-temp-item>
-            <dart-list-temp-item prop="Email" label="邮箱">
-              <template #default="scope">
-                <el-input
-                  v-model="scope.row.Email"
-                  placeholder="请输入邮箱"
-                  :max-length="100"
-                  clearable
-                ></el-input>
-              </template>
-            </dart-list-temp-item>
-            <dart-list-temp-item prop="Phone" label="手机号">
-              <template #default="scope">
-                <dart-input
-                  v-model="scope.row.Phone"
-                  input-type="num"
-                  placeholder="请输入手机号"
-                  :maxlength="11"
-                  clearable
-                ></dart-input>
-              </template>
-            </dart-list-temp-item>
-          </dart-list-temp>
-        </el-form-item>
-        <el-form-item class="tc">
-          <el-button @click="status = false">取消</el-button>
-          <el-button type="primary" @click="onSubmit">保存</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-  </el-drawer>
+  <DrawerMode
+    v-model="status"
+    title="预警配置"
+    @closed="onClosed"
+    :loading="slideLoading"
+    :confirmLoading="confirmLoading"
+    footerIsCenter
+    isEdit
+    @confirm="onSubmit"
+  >
+    <el-form :model="formData" ref="formRef" :rules="formRules">
+      <el-form-item prop="list">
+        <dart-list-temp
+          v-model="formData.list"
+          :rules="listRules"
+          :max="20"
+          ref="listRef"
+          :default-data="{ UserName: '', Email: '', Phone: '' }"
+          @change="onClearVaid('list')"
+        >
+          <dart-list-temp-item prop="UserName" label="用户名">
+            <template #default="scope">
+              <el-input
+                v-model="scope.row.UserName"
+                placeholder="请输入用户名"
+                :max-length="30"
+                clearable
+              ></el-input>
+            </template>
+          </dart-list-temp-item>
+          <dart-list-temp-item prop="Email" label="邮箱">
+            <template #default="scope">
+              <el-input
+                v-model="scope.row.Email"
+                placeholder="请输入邮箱"
+                :max-length="100"
+                clearable
+              ></el-input>
+            </template>
+          </dart-list-temp-item>
+          <dart-list-temp-item prop="Phone" label="手机号">
+            <template #default="scope">
+              <dart-input
+                v-model="scope.row.Phone"
+                input-type="num"
+                placeholder="请输入手机号"
+                :maxlength="11"
+                clearable
+              ></dart-input>
+            </template>
+          </dart-list-temp-item>
+        </dart-list-temp>
+      </el-form-item>
+    </el-form>
+  </DrawerMode>
 </template>
 
 <script lang="ts" setup>
@@ -61,11 +64,13 @@ import { apiAddWarningConfig, apiGetWarningConfig } from '@/api/index';
 import { showMessage } from '@/utils';
 import type { ResponseInfo } from '@/types/common.d';
 import type { TypeAlertSetting } from '@/types/index.d';
+import DrawerMode from '@/components/DrawerMode.vue';
 const slideLoading = ref(false);
 const status = ref(true);
 const formRef = ref<FormInstance>();
 const listRef = ref();
 const router = useRouter();
+const confirmLoading = ref(false);
 const formRules: FormRules = {
   list: [
     { required: true, message: '请添加预警配置', trigger: 'change' },
@@ -101,18 +106,20 @@ const formData = reactive({
 const setLoading = (value: boolean) => {
   slideLoading.value = value;
 };
+const setConfirmLoading = (value: boolean) => {
+  confirmLoading.value = value;
+};
 const onSubmit = () => {
-  setLoading(true);
   formRef?.value?.validate((valid) => {
     if (valid) {
+      setConfirmLoading(true);
       saveList(formData.list, () => {
-        setLoading(false);
+        setConfirmLoading(false);
       });
       return;
     }
 
     showMessage('请检查输入项');
-    setLoading(false);
   });
 };
 const onClearVaid = (name: string) => {

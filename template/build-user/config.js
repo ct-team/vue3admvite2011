@@ -28,7 +28,7 @@ module.exports = {
     }
   },
   devServer: {
-    //host: 'localhost',
+    host: '0.0.0.0',
     //disableHostCheck: true,
     port: 1507, // 端口号
     open: '/',

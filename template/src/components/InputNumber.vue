@@ -42,7 +42,7 @@ const props = defineProps({
   controlsPosition: { type: String, default: 'right' },
   placeholder: String,
   validateEvent: { type: Boolean, default: true },
-  isValidate: Boolean,
+  isValidate: Boolean
 });
 const emit = defineEmits(['update:modelValue', 'change', 'focus', 'blur']);
 const inputNumberRef = ref();
